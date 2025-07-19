@@ -20,9 +20,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   // which is used to look up the session in the database.
   session: {
     strategy: "database",
-    // Set the session max age to 24 hours (in seconds).
+    // Set the session max age to 2 hours (in seconds).
     // After this period, the session will be invalid and the user must log in again.
-    maxAge: 24 * 60 * 60, // 86400 seconds = 24 hours
+    maxAge: 2 * 60 * 60, // 7200 seconds = 2 hours
   },
   providers: [
     // --- OAUTH PROVIDERS (EXISTING) ---
