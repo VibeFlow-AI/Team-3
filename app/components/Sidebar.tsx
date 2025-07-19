@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Home, PencilLine, UserCircle2 } from "lucide-react";
+import { Home, PencilLine, UserCircle2, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type SidebarProps = {
@@ -43,6 +43,7 @@ const Sidebar = ({ hovered, onHoverChange }: SidebarProps) => {
             <nav className="flex flex-col mt-12 py-4 px-2 space-y-2">
                 <SidebarItem href="/" icon={<Home size={22} />} label="Home" hovered={hovered} />
                 <SidebarItem href="/mentor-onboarding" icon={<PencilLine size={22} />} label="Onboarding" hovered={hovered} />
+                <SidebarItem href="/booked-sessions" icon={<Calendar size={22} />} label="Booked Sessions" hovered={hovered} />
             </nav>
 
             {/* Bottom - Avatar/Profile */}
