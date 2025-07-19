@@ -798,7 +798,11 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
+<<<<<<< HEAD
       modelProps: "user" | "student" | "subjectSkill" | "mentor" | "admin" | "account" | "session" | "verificationToken" | "sample"
+=======
+      modelProps: "user" | "student" | "mentor" | "admin" | "account" | "session" | "verificationToken" | "sample"
+>>>>>>> 071e27f799ca0da457f11fd4136014d109cdda84
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -5295,16 +5299,35 @@ export namespace Prisma {
 
   export type AggregateMentor = {
     _count: MentorCountAggregateOutputType | null
+    _avg: MentorAvgAggregateOutputType | null
+    _sum: MentorSumAggregateOutputType | null
     _min: MentorMinAggregateOutputType | null
     _max: MentorMaxAggregateOutputType | null
+  }
+
+  export type MentorAvgAggregateOutputType = {
+    onboardingStep: number | null
+  }
+
+  export type MentorSumAggregateOutputType = {
+    onboardingStep: number | null
   }
 
   export type MentorMinAggregateOutputType = {
     id: string | null
     userId: string | null
-    professionalRole: string | null
+    preferredLanguage: string | null
+    currentLocation: string | null
     bio: string | null
-    expertise: string | null
+    professionalRole: string | null
+    subjectsToTeach: string | null
+    teachingExperience: string | null
+    preferredStudentLevels: string | null
+    linkedinProfile: string | null
+    githubPortfolio: string | null
+    profilePictureUrl: string | null
+    onboardingCompleted: boolean | null
+    onboardingStep: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5312,9 +5335,18 @@ export namespace Prisma {
   export type MentorMaxAggregateOutputType = {
     id: string | null
     userId: string | null
-    professionalRole: string | null
+    preferredLanguage: string | null
+    currentLocation: string | null
     bio: string | null
-    expertise: string | null
+    professionalRole: string | null
+    subjectsToTeach: string | null
+    teachingExperience: string | null
+    preferredStudentLevels: string | null
+    linkedinProfile: string | null
+    githubPortfolio: string | null
+    profilePictureUrl: string | null
+    onboardingCompleted: boolean | null
+    onboardingStep: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5322,21 +5354,47 @@ export namespace Prisma {
   export type MentorCountAggregateOutputType = {
     id: number
     userId: number
-    professionalRole: number
+    preferredLanguage: number
+    currentLocation: number
     bio: number
-    expertise: number
+    professionalRole: number
+    subjectsToTeach: number
+    teachingExperience: number
+    preferredStudentLevels: number
+    linkedinProfile: number
+    githubPortfolio: number
+    profilePictureUrl: number
+    onboardingCompleted: number
+    onboardingStep: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
 
+  export type MentorAvgAggregateInputType = {
+    onboardingStep?: true
+  }
+
+  export type MentorSumAggregateInputType = {
+    onboardingStep?: true
+  }
+
   export type MentorMinAggregateInputType = {
     id?: true
     userId?: true
-    professionalRole?: true
+    preferredLanguage?: true
+    currentLocation?: true
     bio?: true
-    expertise?: true
+    professionalRole?: true
+    subjectsToTeach?: true
+    teachingExperience?: true
+    preferredStudentLevels?: true
+    linkedinProfile?: true
+    githubPortfolio?: true
+    profilePictureUrl?: true
+    onboardingCompleted?: true
+    onboardingStep?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5344,9 +5402,18 @@ export namespace Prisma {
   export type MentorMaxAggregateInputType = {
     id?: true
     userId?: true
-    professionalRole?: true
+    preferredLanguage?: true
+    currentLocation?: true
     bio?: true
-    expertise?: true
+    professionalRole?: true
+    subjectsToTeach?: true
+    teachingExperience?: true
+    preferredStudentLevels?: true
+    linkedinProfile?: true
+    githubPortfolio?: true
+    profilePictureUrl?: true
+    onboardingCompleted?: true
+    onboardingStep?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5354,9 +5421,18 @@ export namespace Prisma {
   export type MentorCountAggregateInputType = {
     id?: true
     userId?: true
-    professionalRole?: true
+    preferredLanguage?: true
+    currentLocation?: true
     bio?: true
-    expertise?: true
+    professionalRole?: true
+    subjectsToTeach?: true
+    teachingExperience?: true
+    preferredStudentLevels?: true
+    linkedinProfile?: true
+    githubPortfolio?: true
+    profilePictureUrl?: true
+    onboardingCompleted?: true
+    onboardingStep?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5400,6 +5476,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: MentorAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MentorSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: MentorMinAggregateInputType
@@ -5430,6 +5518,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: MentorCountAggregateInputType | true
+    _avg?: MentorAvgAggregateInputType
+    _sum?: MentorSumAggregateInputType
     _min?: MentorMinAggregateInputType
     _max?: MentorMaxAggregateInputType
   }
@@ -5437,12 +5527,23 @@ export namespace Prisma {
   export type MentorGroupByOutputType = {
     id: string
     userId: string
-    professionalRole: string | null
+    preferredLanguage: string | null
+    currentLocation: string | null
     bio: string | null
-    expertise: string | null
+    professionalRole: string | null
+    subjectsToTeach: string | null
+    teachingExperience: string | null
+    preferredStudentLevels: string | null
+    linkedinProfile: string | null
+    githubPortfolio: string | null
+    profilePictureUrl: string | null
+    onboardingCompleted: boolean
+    onboardingStep: number
     createdAt: Date
     updatedAt: Date
     _count: MentorCountAggregateOutputType | null
+    _avg: MentorAvgAggregateOutputType | null
+    _sum: MentorSumAggregateOutputType | null
     _min: MentorMinAggregateOutputType | null
     _max: MentorMaxAggregateOutputType | null
   }
@@ -5464,9 +5565,18 @@ export namespace Prisma {
   export type MentorSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    professionalRole?: boolean
+    preferredLanguage?: boolean
+    currentLocation?: boolean
     bio?: boolean
-    expertise?: boolean
+    professionalRole?: boolean
+    subjectsToTeach?: boolean
+    teachingExperience?: boolean
+    preferredStudentLevels?: boolean
+    linkedinProfile?: boolean
+    githubPortfolio?: boolean
+    profilePictureUrl?: boolean
+    onboardingCompleted?: boolean
+    onboardingStep?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5475,9 +5585,18 @@ export namespace Prisma {
   export type MentorSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    professionalRole?: boolean
+    preferredLanguage?: boolean
+    currentLocation?: boolean
     bio?: boolean
-    expertise?: boolean
+    professionalRole?: boolean
+    subjectsToTeach?: boolean
+    teachingExperience?: boolean
+    preferredStudentLevels?: boolean
+    linkedinProfile?: boolean
+    githubPortfolio?: boolean
+    profilePictureUrl?: boolean
+    onboardingCompleted?: boolean
+    onboardingStep?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5486,9 +5605,18 @@ export namespace Prisma {
   export type MentorSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     userId?: boolean
-    professionalRole?: boolean
+    preferredLanguage?: boolean
+    currentLocation?: boolean
     bio?: boolean
-    expertise?: boolean
+    professionalRole?: boolean
+    subjectsToTeach?: boolean
+    teachingExperience?: boolean
+    preferredStudentLevels?: boolean
+    linkedinProfile?: boolean
+    githubPortfolio?: boolean
+    profilePictureUrl?: boolean
+    onboardingCompleted?: boolean
+    onboardingStep?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5497,14 +5625,23 @@ export namespace Prisma {
   export type MentorSelectScalar = {
     id?: boolean
     userId?: boolean
-    professionalRole?: boolean
+    preferredLanguage?: boolean
+    currentLocation?: boolean
     bio?: boolean
-    expertise?: boolean
+    professionalRole?: boolean
+    subjectsToTeach?: boolean
+    teachingExperience?: boolean
+    preferredStudentLevels?: boolean
+    linkedinProfile?: boolean
+    githubPortfolio?: boolean
+    profilePictureUrl?: boolean
+    onboardingCompleted?: boolean
+    onboardingStep?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type MentorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "professionalRole" | "bio" | "expertise" | "createdAt" | "updatedAt", ExtArgs["result"]["mentor"]>
+  export type MentorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "preferredLanguage" | "currentLocation" | "bio" | "professionalRole" | "subjectsToTeach" | "teachingExperience" | "preferredStudentLevels" | "linkedinProfile" | "githubPortfolio" | "profilePictureUrl" | "onboardingCompleted" | "onboardingStep" | "createdAt" | "updatedAt", ExtArgs["result"]["mentor"]>
   export type MentorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -5523,9 +5660,18 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
-      professionalRole: string | null
+      preferredLanguage: string | null
+      currentLocation: string | null
       bio: string | null
-      expertise: string | null
+      professionalRole: string | null
+      subjectsToTeach: string | null
+      teachingExperience: string | null
+      preferredStudentLevels: string | null
+      linkedinProfile: string | null
+      githubPortfolio: string | null
+      profilePictureUrl: string | null
+      onboardingCompleted: boolean
+      onboardingStep: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["mentor"]>
@@ -5954,9 +6100,18 @@ export namespace Prisma {
   interface MentorFieldRefs {
     readonly id: FieldRef<"Mentor", 'String'>
     readonly userId: FieldRef<"Mentor", 'String'>
-    readonly professionalRole: FieldRef<"Mentor", 'String'>
+    readonly preferredLanguage: FieldRef<"Mentor", 'String'>
+    readonly currentLocation: FieldRef<"Mentor", 'String'>
     readonly bio: FieldRef<"Mentor", 'String'>
-    readonly expertise: FieldRef<"Mentor", 'String'>
+    readonly professionalRole: FieldRef<"Mentor", 'String'>
+    readonly subjectsToTeach: FieldRef<"Mentor", 'String'>
+    readonly teachingExperience: FieldRef<"Mentor", 'String'>
+    readonly preferredStudentLevels: FieldRef<"Mentor", 'String'>
+    readonly linkedinProfile: FieldRef<"Mentor", 'String'>
+    readonly githubPortfolio: FieldRef<"Mentor", 'String'>
+    readonly profilePictureUrl: FieldRef<"Mentor", 'String'>
+    readonly onboardingCompleted: FieldRef<"Mentor", 'Boolean'>
+    readonly onboardingStep: FieldRef<"Mentor", 'Int'>
     readonly createdAt: FieldRef<"Mentor", 'DateTime'>
     readonly updatedAt: FieldRef<"Mentor", 'DateTime'>
   }
@@ -11598,9 +11753,18 @@ export namespace Prisma {
   export const MentorScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
-    professionalRole: 'professionalRole',
+    preferredLanguage: 'preferredLanguage',
+    currentLocation: 'currentLocation',
     bio: 'bio',
-    expertise: 'expertise',
+    professionalRole: 'professionalRole',
+    subjectsToTeach: 'subjectsToTeach',
+    teachingExperience: 'teachingExperience',
+    preferredStudentLevels: 'preferredStudentLevels',
+    linkedinProfile: 'linkedinProfile',
+    githubPortfolio: 'githubPortfolio',
+    profilePictureUrl: 'profilePictureUrl',
+    onboardingCompleted: 'onboardingCompleted',
+    onboardingStep: 'onboardingStep',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -12021,9 +12185,18 @@ export namespace Prisma {
     NOT?: MentorWhereInput | MentorWhereInput[]
     id?: StringFilter<"Mentor"> | string
     userId?: StringFilter<"Mentor"> | string
-    professionalRole?: StringNullableFilter<"Mentor"> | string | null
+    preferredLanguage?: StringNullableFilter<"Mentor"> | string | null
+    currentLocation?: StringNullableFilter<"Mentor"> | string | null
     bio?: StringNullableFilter<"Mentor"> | string | null
-    expertise?: StringNullableFilter<"Mentor"> | string | null
+    professionalRole?: StringNullableFilter<"Mentor"> | string | null
+    subjectsToTeach?: StringNullableFilter<"Mentor"> | string | null
+    teachingExperience?: StringNullableFilter<"Mentor"> | string | null
+    preferredStudentLevels?: StringNullableFilter<"Mentor"> | string | null
+    linkedinProfile?: StringNullableFilter<"Mentor"> | string | null
+    githubPortfolio?: StringNullableFilter<"Mentor"> | string | null
+    profilePictureUrl?: StringNullableFilter<"Mentor"> | string | null
+    onboardingCompleted?: BoolFilter<"Mentor"> | boolean
+    onboardingStep?: IntFilter<"Mentor"> | number
     createdAt?: DateTimeFilter<"Mentor"> | Date | string
     updatedAt?: DateTimeFilter<"Mentor"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -12032,9 +12205,18 @@ export namespace Prisma {
   export type MentorOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    professionalRole?: SortOrderInput | SortOrder
+    preferredLanguage?: SortOrderInput | SortOrder
+    currentLocation?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
-    expertise?: SortOrderInput | SortOrder
+    professionalRole?: SortOrderInput | SortOrder
+    subjectsToTeach?: SortOrderInput | SortOrder
+    teachingExperience?: SortOrderInput | SortOrder
+    preferredStudentLevels?: SortOrderInput | SortOrder
+    linkedinProfile?: SortOrderInput | SortOrder
+    githubPortfolio?: SortOrderInput | SortOrder
+    profilePictureUrl?: SortOrderInput | SortOrder
+    onboardingCompleted?: SortOrder
+    onboardingStep?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -12046,9 +12228,18 @@ export namespace Prisma {
     AND?: MentorWhereInput | MentorWhereInput[]
     OR?: MentorWhereInput[]
     NOT?: MentorWhereInput | MentorWhereInput[]
-    professionalRole?: StringNullableFilter<"Mentor"> | string | null
+    preferredLanguage?: StringNullableFilter<"Mentor"> | string | null
+    currentLocation?: StringNullableFilter<"Mentor"> | string | null
     bio?: StringNullableFilter<"Mentor"> | string | null
-    expertise?: StringNullableFilter<"Mentor"> | string | null
+    professionalRole?: StringNullableFilter<"Mentor"> | string | null
+    subjectsToTeach?: StringNullableFilter<"Mentor"> | string | null
+    teachingExperience?: StringNullableFilter<"Mentor"> | string | null
+    preferredStudentLevels?: StringNullableFilter<"Mentor"> | string | null
+    linkedinProfile?: StringNullableFilter<"Mentor"> | string | null
+    githubPortfolio?: StringNullableFilter<"Mentor"> | string | null
+    profilePictureUrl?: StringNullableFilter<"Mentor"> | string | null
+    onboardingCompleted?: BoolFilter<"Mentor"> | boolean
+    onboardingStep?: IntFilter<"Mentor"> | number
     createdAt?: DateTimeFilter<"Mentor"> | Date | string
     updatedAt?: DateTimeFilter<"Mentor"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -12057,14 +12248,25 @@ export namespace Prisma {
   export type MentorOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
-    professionalRole?: SortOrderInput | SortOrder
+    preferredLanguage?: SortOrderInput | SortOrder
+    currentLocation?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
-    expertise?: SortOrderInput | SortOrder
+    professionalRole?: SortOrderInput | SortOrder
+    subjectsToTeach?: SortOrderInput | SortOrder
+    teachingExperience?: SortOrderInput | SortOrder
+    preferredStudentLevels?: SortOrderInput | SortOrder
+    linkedinProfile?: SortOrderInput | SortOrder
+    githubPortfolio?: SortOrderInput | SortOrder
+    profilePictureUrl?: SortOrderInput | SortOrder
+    onboardingCompleted?: SortOrder
+    onboardingStep?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: MentorCountOrderByAggregateInput
+    _avg?: MentorAvgOrderByAggregateInput
     _max?: MentorMaxOrderByAggregateInput
     _min?: MentorMinOrderByAggregateInput
+    _sum?: MentorSumOrderByAggregateInput
   }
 
   export type MentorScalarWhereWithAggregatesInput = {
@@ -12073,9 +12275,18 @@ export namespace Prisma {
     NOT?: MentorScalarWhereWithAggregatesInput | MentorScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Mentor"> | string
     userId?: StringWithAggregatesFilter<"Mentor"> | string
-    professionalRole?: StringNullableWithAggregatesFilter<"Mentor"> | string | null
+    preferredLanguage?: StringNullableWithAggregatesFilter<"Mentor"> | string | null
+    currentLocation?: StringNullableWithAggregatesFilter<"Mentor"> | string | null
     bio?: StringNullableWithAggregatesFilter<"Mentor"> | string | null
-    expertise?: StringNullableWithAggregatesFilter<"Mentor"> | string | null
+    professionalRole?: StringNullableWithAggregatesFilter<"Mentor"> | string | null
+    subjectsToTeach?: StringNullableWithAggregatesFilter<"Mentor"> | string | null
+    teachingExperience?: StringNullableWithAggregatesFilter<"Mentor"> | string | null
+    preferredStudentLevels?: StringNullableWithAggregatesFilter<"Mentor"> | string | null
+    linkedinProfile?: StringNullableWithAggregatesFilter<"Mentor"> | string | null
+    githubPortfolio?: StringNullableWithAggregatesFilter<"Mentor"> | string | null
+    profilePictureUrl?: StringNullableWithAggregatesFilter<"Mentor"> | string | null
+    onboardingCompleted?: BoolWithAggregatesFilter<"Mentor"> | boolean
+    onboardingStep?: IntWithAggregatesFilter<"Mentor"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Mentor"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Mentor"> | Date | string
   }
@@ -12665,9 +12876,18 @@ export namespace Prisma {
 
   export type MentorCreateInput = {
     id?: string
-    professionalRole?: string | null
+    preferredLanguage?: string | null
+    currentLocation?: string | null
     bio?: string | null
-    expertise?: string | null
+    professionalRole?: string | null
+    subjectsToTeach?: string | null
+    teachingExperience?: string | null
+    preferredStudentLevels?: string | null
+    linkedinProfile?: string | null
+    githubPortfolio?: string | null
+    profilePictureUrl?: string | null
+    onboardingCompleted?: boolean
+    onboardingStep?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutMentorInput
@@ -12676,18 +12896,36 @@ export namespace Prisma {
   export type MentorUncheckedCreateInput = {
     id?: string
     userId: string
-    professionalRole?: string | null
+    preferredLanguage?: string | null
+    currentLocation?: string | null
     bio?: string | null
-    expertise?: string | null
+    professionalRole?: string | null
+    subjectsToTeach?: string | null
+    teachingExperience?: string | null
+    preferredStudentLevels?: string | null
+    linkedinProfile?: string | null
+    githubPortfolio?: string | null
+    profilePictureUrl?: string | null
+    onboardingCompleted?: boolean
+    onboardingStep?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type MentorUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    professionalRole?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    currentLocation?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    expertise?: NullableStringFieldUpdateOperationsInput | string | null
+    professionalRole?: NullableStringFieldUpdateOperationsInput | string | null
+    subjectsToTeach?: NullableStringFieldUpdateOperationsInput | string | null
+    teachingExperience?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredStudentLevels?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
+    githubPortfolio?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    onboardingStep?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutMentorNestedInput
@@ -12696,9 +12934,18 @@ export namespace Prisma {
   export type MentorUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    professionalRole?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    currentLocation?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    expertise?: NullableStringFieldUpdateOperationsInput | string | null
+    professionalRole?: NullableStringFieldUpdateOperationsInput | string | null
+    subjectsToTeach?: NullableStringFieldUpdateOperationsInput | string | null
+    teachingExperience?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredStudentLevels?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
+    githubPortfolio?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    onboardingStep?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12706,18 +12953,36 @@ export namespace Prisma {
   export type MentorCreateManyInput = {
     id?: string
     userId: string
-    professionalRole?: string | null
+    preferredLanguage?: string | null
+    currentLocation?: string | null
     bio?: string | null
-    expertise?: string | null
+    professionalRole?: string | null
+    subjectsToTeach?: string | null
+    teachingExperience?: string | null
+    preferredStudentLevels?: string | null
+    linkedinProfile?: string | null
+    githubPortfolio?: string | null
+    profilePictureUrl?: string | null
+    onboardingCompleted?: boolean
+    onboardingStep?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type MentorUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    professionalRole?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    currentLocation?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    expertise?: NullableStringFieldUpdateOperationsInput | string | null
+    professionalRole?: NullableStringFieldUpdateOperationsInput | string | null
+    subjectsToTeach?: NullableStringFieldUpdateOperationsInput | string | null
+    teachingExperience?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredStudentLevels?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
+    githubPortfolio?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    onboardingStep?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12725,9 +12990,18 @@ export namespace Prisma {
   export type MentorUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    professionalRole?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    currentLocation?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    expertise?: NullableStringFieldUpdateOperationsInput | string | null
+    professionalRole?: NullableStringFieldUpdateOperationsInput | string | null
+    subjectsToTeach?: NullableStringFieldUpdateOperationsInput | string | null
+    teachingExperience?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredStudentLevels?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
+    githubPortfolio?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    onboardingStep?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13479,19 +13753,41 @@ export namespace Prisma {
   export type MentorCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    professionalRole?: SortOrder
+    preferredLanguage?: SortOrder
+    currentLocation?: SortOrder
     bio?: SortOrder
-    expertise?: SortOrder
+    professionalRole?: SortOrder
+    subjectsToTeach?: SortOrder
+    teachingExperience?: SortOrder
+    preferredStudentLevels?: SortOrder
+    linkedinProfile?: SortOrder
+    githubPortfolio?: SortOrder
+    profilePictureUrl?: SortOrder
+    onboardingCompleted?: SortOrder
+    onboardingStep?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type MentorAvgOrderByAggregateInput = {
+    onboardingStep?: SortOrder
   }
 
   export type MentorMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    professionalRole?: SortOrder
+    preferredLanguage?: SortOrder
+    currentLocation?: SortOrder
     bio?: SortOrder
-    expertise?: SortOrder
+    professionalRole?: SortOrder
+    subjectsToTeach?: SortOrder
+    teachingExperience?: SortOrder
+    preferredStudentLevels?: SortOrder
+    linkedinProfile?: SortOrder
+    githubPortfolio?: SortOrder
+    profilePictureUrl?: SortOrder
+    onboardingCompleted?: SortOrder
+    onboardingStep?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13499,11 +13795,24 @@ export namespace Prisma {
   export type MentorMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-    professionalRole?: SortOrder
+    preferredLanguage?: SortOrder
+    currentLocation?: SortOrder
     bio?: SortOrder
-    expertise?: SortOrder
+    professionalRole?: SortOrder
+    subjectsToTeach?: SortOrder
+    teachingExperience?: SortOrder
+    preferredStudentLevels?: SortOrder
+    linkedinProfile?: SortOrder
+    githubPortfolio?: SortOrder
+    profilePictureUrl?: SortOrder
+    onboardingCompleted?: SortOrder
+    onboardingStep?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type MentorSumOrderByAggregateInput = {
+    onboardingStep?: SortOrder
   }
 
   export type AdminCountOrderByAggregateInput = {
@@ -13531,6 +13840,20 @@ export namespace Prisma {
     password?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+<<<<<<< HEAD
+=======
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+>>>>>>> 071e27f799ca0da457f11fd4136014d109cdda84
   }
 
   export type AccountProviderProviderAccountIdCompoundUniqueInput = {
@@ -14331,18 +14654,36 @@ export namespace Prisma {
 
   export type MentorCreateWithoutUserInput = {
     id?: string
-    professionalRole?: string | null
+    preferredLanguage?: string | null
+    currentLocation?: string | null
     bio?: string | null
-    expertise?: string | null
+    professionalRole?: string | null
+    subjectsToTeach?: string | null
+    teachingExperience?: string | null
+    preferredStudentLevels?: string | null
+    linkedinProfile?: string | null
+    githubPortfolio?: string | null
+    profilePictureUrl?: string | null
+    onboardingCompleted?: boolean
+    onboardingStep?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type MentorUncheckedCreateWithoutUserInput = {
     id?: string
-    professionalRole?: string | null
+    preferredLanguage?: string | null
+    currentLocation?: string | null
     bio?: string | null
-    expertise?: string | null
+    professionalRole?: string | null
+    subjectsToTeach?: string | null
+    teachingExperience?: string | null
+    preferredStudentLevels?: string | null
+    linkedinProfile?: string | null
+    githubPortfolio?: string | null
+    profilePictureUrl?: string | null
+    onboardingCompleted?: boolean
+    onboardingStep?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14468,18 +14809,36 @@ export namespace Prisma {
 
   export type MentorUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    professionalRole?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    currentLocation?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    expertise?: NullableStringFieldUpdateOperationsInput | string | null
+    professionalRole?: NullableStringFieldUpdateOperationsInput | string | null
+    subjectsToTeach?: NullableStringFieldUpdateOperationsInput | string | null
+    teachingExperience?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredStudentLevels?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
+    githubPortfolio?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    onboardingStep?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MentorUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    professionalRole?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    currentLocation?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    expertise?: NullableStringFieldUpdateOperationsInput | string | null
+    professionalRole?: NullableStringFieldUpdateOperationsInput | string | null
+    subjectsToTeach?: NullableStringFieldUpdateOperationsInput | string | null
+    teachingExperience?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredStudentLevels?: NullableStringFieldUpdateOperationsInput | string | null
+    linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
+    githubPortfolio?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingCompleted?: BoolFieldUpdateOperationsInput | boolean
+    onboardingStep?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

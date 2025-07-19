@@ -19,6 +19,7 @@ enum UserRole {
   STUDENT
   MENTOR
   ADMIN
+<<<<<<< HEAD
 }
 
 // Enum for education levels
@@ -41,6 +42,8 @@ enum LearningStyle {
   HANDS_ON
   THEORETICAL
   MIXED
+=======
+>>>>>>> 071e27f799ca0da457f11fd4136014d109cdda84
 }
 
 // The main User model, linked to Auth.js
@@ -127,10 +130,25 @@ model Mentor {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Add other mentor-specific fields based on the hackathon case study.
-  professionalRole String?
-  bio              String?
-  expertise        String?
+  // Part 1: Personal Information
+  preferredLanguage String? // English, Sinhala, Tamil, Other
+  currentLocation   String? // Current location
+  bio               String? // Short bio (2-3 sentences)
+  professionalRole  String? // Professional role
+
+  // Part 2: Areas of Expertise
+  subjectsToTeach        String? // Comma-separated subjects to teach
+  teachingExperience     String? // None, 1-3 years, 3-5 years, 5+ years
+  preferredStudentLevels String? // Comma-separated levels: Grade 3-5, Grade 6-9, etc.
+
+  // Part 3: Social & Professional Links
+  linkedinProfile   String? // LinkedIn URL (mandatory)
+  githubPortfolio   String? // GitHub or Portfolio URL (optional)
+  profilePictureUrl String? // Profile picture URL
+
+  // Onboarding completion status
+  onboardingCompleted Boolean @default(false)
+  onboardingStep      Int     @default(1) // Track which step they're on (1-3)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
