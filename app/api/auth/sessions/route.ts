@@ -1,59 +1,19 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@/lib/generated/prisma";
+import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
-
-const prisma = new PrismaClient();
 
 /**
  * GET /api/auth/sessions
  * 
- * Retrieves all active sessions for the authenticated user.
- * This allows users to see where they are currently logged in and manage their sessions.
- * 
- * @returns Array of session objects containing session details
+ * DEPRECATED: Use /api/auth/unified-session?include=sessions instead.
+ * This endpoint is kept for backward compatibility.
  */
 export async function GET() {
-  try {
-    const session = await auth();
-
-    if (!session?.user?.id) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
-    // Get all sessions for the current user
-    const userSessions = await prisma.session.findMany({
-      where: { userId: session.user.id },
-      select: {
-        id: true,
-        sessionToken: true,
-        expires: true,
-        // Don't expose the full session token for security
-      },
-      orderBy: {
-        expires: 'desc'
-      }
-    });
-
-    // Add additional metadata for each session
-    const sessionsWithMetadata = userSessions.map(userSession => ({
-      id: userSession.id,
-      expires: userSession.expires,
-      // Note: We can't directly compare session tokens due to type limitations
-      // This would require additional logic to identify the current session
-      timeUntilExpiry: Math.max(0, Math.floor((userSession.expires.getTime() - Date.now()) / 1000)),
-      expiresAt: userSession.expires.toISOString(),
-      isActive: userSession.expires > new Date(),
-    }));
-
-    return NextResponse.json({
-      sessions: sessionsWithMetadata,
-      totalSessions: userSessions.length,
-    });
-
-  } catch (error) {
-    console.error("Error fetching user sessions:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
-  }
+  return NextResponse.json({
+    message: "This endpoint is deprecated. Use /api/auth/unified-session?include=sessions instead.",
+    newEndpoint: "/api/auth/unified-session?include=sessions",
+    deprecated: true
+  }, { status: 200 });
 }
 
 /**
@@ -76,7 +36,10 @@ export async function DELETE(request: Request) {
     }
     
     if (!sessionIdToDelete) {
-      return new NextResponse("Session ID is required", { status: 400 });
+      return NextResponse.json(
+        { error: "Session ID is required" },
+        { status: 400 }
+      );
     }
 
     // Verify the session exists and belongs to the current user
@@ -85,11 +48,17 @@ export async function DELETE(request: Request) {
     });
 
     if (!targetSession) {
-      return new NextResponse("Session not found", { status: 404 });
+      return NextResponse.json(
+        { error: "Session not found" },
+        { status: 404 }
+      );
     }
 
     if (targetSession.userId !== session.user.id) {
-      return new NextResponse("Forbidden - You can only delete your own sessions", { status: 403 });
+      return NextResponse.json(
+        { error: "Access denied. You can only delete your own sessions." },
+        { status: 403 }
+      );
     }
 
     // Delete the session from the database
@@ -126,30 +95,24 @@ export async function POST(request: Request) {
     const action = searchParams.get('action');
     
     if (action === 'revoke-all') {
-      // Delete all sessions except current ones that are still active
-      // Note: We revoke all other sessions for the user
-      const currentTime = new Date();
+      // Get current session token to exclude it
+      const currentSessionToken = (session as any).sessionToken;
       
-      // Count sessions before deletion for reporting
-      const totalSessions = await prisma.session.count({
-        where: { userId: session.user.id }
-      });
-      
-      // Delete all sessions for the user (they'll need to re-login)
-      // In a production scenario, you might want to be more selective
-      const deletedSessions = await prisma.session.deleteMany({
+      // Delete all sessions except the current one
+      const deleteResult = await prisma.session.deleteMany({
         where: {
           userId: session.user.id,
-          expires: {
-            lt: currentTime // Only delete expired sessions, or modify logic as needed
-          }
+          ...(currentSessionToken && {
+            sessionToken: {
+              not: currentSessionToken
+            }
+          })
         }
       });
 
       return NextResponse.json({
-        message: "All other sessions revoked successfully",
-        revokedCount: deletedSessions.count,
-        totalSessions: totalSessions
+        message: `${deleteResult.count} sessions revoked successfully`,
+        revokedCount: deleteResult.count
       });
     }
 

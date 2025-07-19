@@ -2,99 +2,199 @@ import { signIn } from "@/auth"
 import { NextRequest, NextResponse } from "next/server"
 
 /**
- * POST /api/auth/sign-in
+ * Interface for unified sign-in supporting all authentication methods
+ */
+interface UnifiedSignInData {
+  provider: string
+  email?: string
+  password?: string
+  callbackUrl?: string
+}
+
+/**
+ * POST /api/auth/unified-signin
  * 
- * Initiates OAuth sign-in flow with the specified provider.
- * This endpoint is useful for programmatic sign-in requests or when you need
- * to handle sign-in logic on the server side.
+ * Unified sign-in endpoint supporting all authentication methods.
+ * Handles OAuth providers (github, google, facebook) and credentials-based authentication.
  * 
- * @param {NextRequest} request - The incoming request containing provider information
- * @returns {Response} JSON response with sign-in status or error
+ * @param {NextRequest} request - Sign-in data with provider and optional credentials
+ * @returns {Response} JSON response with authentication result
  * 
  * @example
- * // Request body: { "provider": "github" }
- * // Response: { "message": "Sign-in initiated with github", "success": true }
+ * // OAuth sign-in:
+ * {
+ *   "provider": "github",
+ *   "callbackUrl": "/dashboard"
+ * }
+ * 
+ * // Credentials sign-in:
+ * {
+ *   "provider": "credentials",
+ *   "email": "user@example.com",
+ *   "password": "password123",
+ *   "callbackUrl": "/dashboard"
+ * }
+ * 
+ * // Success response:
+ * {
+ *   "success": true,
+ *   "message": "Authentication successful",
+ *   "provider": "github"
+ * }
  */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { provider, callbackUrl } = body
+    const body: UnifiedSignInData = await request.json()
+    const { provider, email, password, callbackUrl } = body
     
-    // Validate that a provider was specified
     if (!provider) {
       return NextResponse.json(
-        { error: "Provider is required", success: false }, 
+        { error: "Provider is required", success: false },
         { status: 400 }
       )
     }
-    
-    // Validate that the provider is one of our configured providers
+
     const validProviders = ["github", "google", "facebook", "email", "credentials"]
     if (!validProviders.includes(provider.toLowerCase())) {
       return NextResponse.json(
         { 
           error: `Invalid provider. Must be one of: ${validProviders.join(", ")}`,
           success: false 
-        }, 
+        },
         { status: 400 }
       )
     }
-    
-    // Optional callback URL for post-authentication redirect
-    const options: any = { redirect: false }
-    if (callbackUrl) {
-      options.redirectTo = callbackUrl
+
+    // Handle credentials authentication
+    if (provider === "credentials") {
+      if (!email || !password) {
+        return NextResponse.json(
+          { error: "Email and password are required for credentials sign-in", success: false },
+          { status: 400 }
+        )
+      }
+      
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(email)) {
+        return NextResponse.json(
+          { error: "Invalid email format", success: false },
+          { status: 400 }
+        )
+      }
+      
+      try {
+        const result = await signIn("credentials", {
+          redirect: false,
+          email,
+          password,
+          ...(callbackUrl && { redirectTo: callbackUrl })
+        })
+        
+        return NextResponse.json({
+          success: true,
+          message: "Authentication successful",
+          provider: "credentials"
+        })
+      } catch (authError) {
+        console.error("Credentials authentication failed:", authError)
+        return NextResponse.json(
+          { 
+            error: "Invalid credentials",
+            success: false 
+          },
+          { status: 401 }
+        )
+      }
     }
-    
-    // Initiate the OAuth sign-in process
-    // Note: This will typically redirect the user to the OAuth provider
-    await signIn(provider, options)
-    
-    return NextResponse.json({ 
-      message: `Sign-in initiated with ${provider}`,
-      success: true
-    }, { status: 200 })
-    
+
+    // Handle OAuth providers
+    try {
+      const result = await signIn(provider, {
+        redirect: false,
+        ...(callbackUrl && { redirectTo: callbackUrl })
+      })
+
+      return NextResponse.json({
+        success: true,
+        message: `Sign-in initiated with ${provider}`,
+        provider
+      })
+    } catch (error) {
+      console.error(`${provider} sign-in error:`, error)
+      return NextResponse.json(
+        { 
+          error: `Failed to initiate sign-in with ${provider}`,
+          success: false 
+        },
+        { status: 500 }
+      )
+    }
+
   } catch (error) {
-    console.error("Error during sign-in:", error)
+    console.error("Sign-in error:", error)
     return NextResponse.json(
       { 
-        error: "Failed to initiate sign-in",
+        error: "Sign-in failed",
         success: false 
-      }, 
+      },
       { status: 500 }
     )
   }
 }
 
 /**
- * GET /api/auth/sign-in
+ * GET /api/auth/unified-signin
  * 
- * Returns information about available authentication providers.
- * This can be used by the frontend to dynamically display sign-in options.
+ * Returns information about available authentication providers and methods.
  * 
- * @returns {Response} JSON response with available providers
- * 
- * @example
- * // Response:
- * {
- *   "providers": ["github", "google", "facebook"],
- *   "message": "Available authentication providers"
- * }
+ * @returns {Response} JSON response with provider information
  */
 export async function GET() {
   try {
-    const providers = ["github", "google", "facebook", "email", "credentials"]
+    const providers = [
+      {
+        id: "github",
+        name: "GitHub",
+        type: "oauth",
+        description: "Sign in with your GitHub account"
+      },
+      {
+        id: "google",
+        name: "Google",
+        type: "oauth", 
+        description: "Sign in with your Google account"
+      },
+      {
+        id: "facebook",
+        name: "Facebook",
+        type: "oauth",
+        description: "Sign in with your Facebook account"
+      },
+      {
+        id: "credentials",
+        name: "Email & Password",
+        type: "credentials",
+        description: "Sign in with email and password",
+        requiredFields: ["email", "password"]
+      }
+    ]
     
     return NextResponse.json({
+      message: "Available authentication providers",
       providers,
-      message: "Available authentication providers"
-    }, { status: 200 })
+      endpoints: {
+        signin: "/api/auth/unified-signin",
+        register: "/api/auth/unified-register",
+        session: "/api/auth/unified-session",
+        signout: "/api/auth/sign-out"
+      }
+    })
     
   } catch (error) {
     console.error("Error fetching providers:", error)
     return NextResponse.json(
-      { error: "Failed to fetch providers" }, 
+      { error: "Failed to fetch providers" },
       { status: 500 }
     )
   }

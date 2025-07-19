@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "./lib/generated/prisma"
+import { prisma } from "./lib/prisma"
 import { UserRole } from "./lib/generated/prisma"
 import bcrypt from "bcryptjs"
 import GitHub from "next-auth/providers/github"
@@ -9,23 +9,47 @@ import Facebook from "next-auth/providers/facebook"
 import Email from "next-auth/providers/email"
 import Credentials from "next-auth/providers/credentials"
 
-// Initialize Prisma Client
-const prisma = new PrismaClient()
+/**
+ * NextAuth.js configuration for EduVibe authentication system
+ * 
+ * Features:
+ * - Database-backed sessions with 24-hour expiry
+ * - Multiple OAuth providers (GitHub, Google, Facebook)
+ * - Email/passwordless authentication
+ * - Credentials-based authentication with bcrypt password hashing
+ * - Custom user roles (STUDENT, MENTOR, ADMIN)
+ * - Prisma adapter for database persistence
+ */
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   
-  // --- SESSION CONFIGURATION UPDATE ---
-  // Strategy is now "database". The session cookie will only contain a sessionToken,
-  // which is used to look up the session in the database.
+  /**
+   * Session Configuration
+   * 
+   * Strategy: "database" - Sessions are stored in the database rather than JWT tokens
+   * MaxAge: 24 hours (86400 seconds) - After this period, users must re-authenticate
+   * 
+   * Database sessions provide better security and allow for session management features
+   * like viewing active sessions and remote logout capabilities.
+   */
   session: {
     strategy: "database",
+<<<<<<< Updated upstream
     // Set the session max age to 2 hours (in seconds).
     // After this period, the session will be invalid and the user must log in again.
     maxAge: 2 * 60 * 60, // 7200 seconds = 2 hours
+=======
+    maxAge: 24 * 60 * 60, // 86400 seconds = 24 hours
+>>>>>>> Stashed changes
   },
   providers: [
-    // --- OAUTH PROVIDERS (EXISTING) ---
+    /**
+     * OAuth Providers
+     * 
+     * Configure OAuth providers for social authentication.
+     * Requires environment variables for client IDs and secrets.
+     */
     GitHub({
       clientId: process.env.AUTH_GITHUB_ID,
       clientSecret: process.env.AUTH_GITHUB_SECRET,
@@ -39,7 +63,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientSecret: process.env.AUTH_FACEBOOK_SECRET,
     }),
 
-    // --- EMAIL (PASSWORDLESS) PROVIDER ---
+    /**
+     * Email Provider (Passwordless Authentication)
+     * 
+     * Sends magic links to users' email addresses for authentication.
+     * Requires SMTP server configuration in environment variables.
+     */
     Email({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
@@ -52,7 +81,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       from: process.env.EMAIL_FROM,
     }),
 
-    // --- CREDENTIALS (EMAIL/PASSWORD) PROVIDER ---
+    /**
+     * Credentials Provider (Email/Password Authentication)
+     * 
+     * Handles traditional email and password authentication.
+     * Passwords are hashed using bcrypt for security.
+     * 
+     * @param credentials - Object containing email and password
+     * @returns User object if authentication successful, null otherwise
+     */
     Credentials({
       name: "Credentials",
       credentials: {
@@ -64,7 +101,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        // 1. Find user by email in the database
+        // Find user by email in the database
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string },
         });
@@ -74,7 +111,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        // 2. Compare the provided password with the stored hashed password
+        // Compare the provided password with the stored hashed password
         const isPasswordValid = await bcrypt.compare(
           credentials.password as string,
           user.password
@@ -84,7 +121,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null; // Password incorrect
         }
 
-        // 3. Return the user object if authentication is successful
+        // Return the user object if authentication is successful
         return {
           id: user.id,
           name: user.name,
@@ -95,26 +132,40 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   
-  // --- CALLBACKS UPDATE ---
-  // With a database strategy, the callbacks are simplified. We ensure the session object
-  // returned to the client contains our custom `id` and `role` fields.
+  /**
+   * Callbacks Configuration
+   * 
+   * With database strategy, callbacks are simplified. The session callback
+   * ensures that custom user fields (id and role) are included in the session
+   * object returned to the client.
+   */
   callbacks: {
+    /**
+     * Session Callback
+     * 
+     * Augments the session object with custom user data from the database.
+     * The user object here comes directly from the database via the adapter.
+     * 
+     * @param session - The session object
+     * @param user - The user object from the database
+     * @returns Modified session object with custom fields
+     */
     async session({ session, user }) {
-      // The `user` object here is the user from the database.
-      // We add the user's ID and role to the session object.
+      // Add the user's ID and role to the session object
       if (session.user) {
         (session.user as any).id = user.id;
-        // The type for role needs to be asserted here
         (session.user as any).role = (user as any).role as UserRole;
       }
       return session;
     },
-    // Note: JWT callback is no longer needed for session management with database strategy
-    // as session data is stored in the database, not in the JWT token
+    // Note: JWT callback is not needed with database strategy
+    // as session data is stored in the database, not in JWT tokens
   },
-  // If you have custom pages for login, error, etc., specify them here.
+  
+  // Custom pages configuration (if needed)
   // pages: {
   //   signIn: '/login',
+  //   error: '/auth/error',
   // },
 })
 
