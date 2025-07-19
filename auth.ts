@@ -14,7 +14,16 @@ const prisma = new PrismaClient()
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt" },
+  
+  // --- SESSION CONFIGURATION UPDATE ---
+  // Strategy is now "database". The session cookie will only contain a sessionToken,
+  // which is used to look up the session in the database.
+  session: {
+    strategy: "database",
+    // Set the session max age to 24 hours (in seconds).
+    // After this period, the session will be invalid and the user must log in again.
+    maxAge: 24 * 60 * 60, // 86400 seconds = 24 hours
+  },
   providers: [
     // --- OAUTH PROVIDERS (EXISTING) ---
     GitHub({
@@ -85,34 +94,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  
+  // --- CALLBACKS UPDATE ---
+  // With a database strategy, the callbacks are simplified. We ensure the session object
+  // returned to the client contains our custom `id` and `role` fields.
   callbacks: {
-    // The `jwt` callback is called when a JWT is created.
-    // We augment the token with the user's ID and role from the database.
-    async jwt({ token }) {
-      if (!token.sub) return token; // If there is no user ID, do nothing.
-
-      const dbUser = await prisma.user.findUnique({
-        where: { id: token.sub },
-      });
-
-      if (!dbUser) return token; // If user is not found, do nothing.
-
-      // Add role and id to the token
-      token.role = dbUser.role;
-      token.id = dbUser.id;
-      
-      return token;
-    },
-
-    // The `session` callback is called when a session is accessed.
-    // We add the custom properties from the JWT to the session object.
-    async session({ session, token }) {
-      if (token && session.user) {
-        (session.user as any).role = token.role as UserRole;
-        (session.user as any).id = token.id as string;
+    async session({ session, user }) {
+      // The `user` object here is the user from the database.
+      // We add the user's ID and role to the session object.
+      if (session.user) {
+        (session.user as any).id = user.id;
+        // The type for role needs to be asserted here
+        (session.user as any).role = (user as any).role as UserRole;
       }
       return session;
     },
+    // Note: JWT callback is no longer needed for session management with database strategy
+    // as session data is stored in the database, not in the JWT token
   },
   // If you have custom pages for login, error, etc., specify them here.
   // pages: {
