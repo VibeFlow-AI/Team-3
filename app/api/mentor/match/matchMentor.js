@@ -1,4 +1,4 @@
-import { PrismaClient } from '../lib/generated/prisma';
+import { PrismaClient } from '../../../../lib/generated/prisma';
 
 const prisma = new PrismaClient();
 
@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
  * API handler to match mentors for a student based on subjects, language, and grade.
  * Expects req.body to contain: { subjects: string[], language: string, grade: string|number }
  */
+
 export default async function handler(req, res) {
   try {
     // Extract student preferences from request body
