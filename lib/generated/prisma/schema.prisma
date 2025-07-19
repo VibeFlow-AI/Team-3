@@ -14,6 +14,111 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Enum for distinguishing user roles
+enum UserRole {
+  STUDENT
+  MENTOR
+}
+
+// The main User model, linked to Auth.js
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(STUDENT) // Default role on signup. This will be confirmed/updated during the onboarding process.
+
+  accounts Account[]
+  sessions Session[]
+
+  // One-to-one relationship to a role-specific profile.
+  // A User can be a Student OR a Mentor. The corresponding record will be created during onboarding.
+  student Student?
+  mentor  Mentor?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// Custom model for the Student profile, linked to a User.
+model Student {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Add other student-specific fields based on the hackathon case study.
+  currentEducationLevel String?
+  school                String?
+  subjectsOfInterest    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("students")
+}
+
+// Custom model for the Mentor profile, linked to a User.
+model Mentor {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Add other mentor-specific fields based on the hackathon case study.
+  professionalRole String?
+  bio              String?
+  expertise        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("mentors")
+}
+
+// --- Auth.js Required Models ---
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// Keep the original Sample model for demonstration purposes
 model Sample {
   id String @id @default(cuid())
 
