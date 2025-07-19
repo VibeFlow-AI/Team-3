@@ -14,6 +14,199 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Enum for distinguishing user roles
+enum UserRole {
+  STUDENT
+  MENTOR
+  ADMIN
+}
+
+// Enum for education levels
+enum EducationLevel {
+  GRADE_9
+  ORDINARY_LEVEL
+  ADVANCED_LEVEL
+}
+
+// Enum for skill levels
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+// Enum for learning styles
+enum LearningStyle {
+  VISUAL
+  HANDS_ON
+  THEORETICAL
+  MIXED
+}
+
+// The main User model, linked to Auth.js
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String? // Optional hashed password for credentials-based authentication
+  role          UserRole  @default(STUDENT) // Default role on signup. This will be confirmed/updated during the onboarding process.
+
+  // Additional basic information fields for onboarding
+  fullName      String? // Complete full name from onboarding
+  age           Int? // Age from onboarding  
+  contactNumber String? // Phone number from onboarding
+
+  accounts Account[]
+  sessions Session[]
+
+  // One-to-one relationship to a role-specific profile.
+  // A User can be a Student OR a Mentor. The corresponding record will be created during onboarding.
+  student Student?
+  mentor  Mentor?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// Custom model for the Student profile, linked to a User.
+model Student {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Academic Background (Part 2)
+  currentEducationLevel EducationLevel?
+  school                String?
+
+  // Subject & Skill Assessment (Part 3)
+  subjectsOfInterest     String? // Comma-separated subjects
+  currentYear            Int? // Current academic year
+  preferredLearningStyle LearningStyle?
+
+  // Learning accommodations
+  hasLearningDisabilities Boolean @default(false)
+  learningAccommodations  String? // Description of accommodations needed
+
+  // Subject skill assessments (one-to-many relationship)
+  subjectSkills SubjectSkill[]
+
+  // Onboarding completion status
+  onboardingCompleted Boolean @default(false)
+  onboardingStep      Int     @default(1) // Track which step they're on (1-3)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("students")
+}
+
+// Model to track skill level for each subject
+model SubjectSkill {
+  id        String  @id @default(cuid())
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  subjectName String // Name of the subject
+  skillLevel  SkillLevel // Beginner/Intermediate/Advanced
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Ensure one skill level per subject per student
+  @@unique([studentId, subjectName])
+  @@map("subject_skills")
+}
+
+// Custom model for the Mentor profile, linked to a User.
+model Mentor {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Part 1: Personal Information
+  preferredLanguage String? // English, Sinhala, Tamil, Other
+  currentLocation   String? // Current location
+  bio               String? // Short bio (2-3 sentences)
+  professionalRole  String? // Professional role
+
+  // Part 2: Areas of Expertise
+  subjectsToTeach        String? // Comma-separated subjects to teach
+  teachingExperience     String? // None, 1-3 years, 3-5 years, 5+ years
+  preferredStudentLevels String? // Comma-separated levels: Grade 3-5, Grade 6-9, etc.
+
+  // Part 3: Social & Professional Links
+  linkedinProfile   String? // LinkedIn URL (mandatory)
+  githubPortfolio   String? // GitHub or Portfolio URL (optional)
+  profilePictureUrl String? // Profile picture URL
+
+  // Onboarding completion status
+  onboardingCompleted Boolean @default(false)
+  onboardingStep      Int     @default(1) // Track which step they're on (1-3)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("mentors")
+}
+
+model Admin {
+  id       String  @id @default(cuid())
+  name     String?
+  email    String? @unique
+  password String? // Optional hashed password for credentials-based authentication
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admins")
+}
+
+// --- Auth.js Required Models ---
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// Keep the original Sample model for demonstration purposes
 model Sample {
   id String @id @default(cuid())
 
