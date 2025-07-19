@@ -27,6 +27,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  password      String? // Optional hashed password for credentials-based authentication
   role          UserRole  @default(STUDENT) // Default role on signup. This will be confirmed/updated during the onboarding process.
 
   accounts Account[]

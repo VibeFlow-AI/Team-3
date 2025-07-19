@@ -34,7 +34,7 @@ export async function GET() {
     const session = await auth()
     
     // List of available authentication providers
-    const providers = ["github", "google", "facebook"]
+    const providers = ["github", "google", "facebook", "email", "credentials"]
     
     // Base response structure
     const response = {

@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Validate that the provider is one of our configured providers
-    const validProviders = ["github", "google", "facebook"]
+    const validProviders = ["github", "google", "facebook", "email", "credentials"]
     if (!validProviders.includes(provider.toLowerCase())) {
       return NextResponse.json(
         { 
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
  */
 export async function GET() {
   try {
-    const providers = ["github", "google", "facebook"]
+    const providers = ["github", "google", "facebook", "email", "credentials"]
     
     return NextResponse.json({
       providers,
