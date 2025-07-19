@@ -18,6 +18,7 @@ datasource db {
 enum UserRole {
   STUDENT
   MENTOR
+  ADMIN
 }
 
 // The main User model, linked to Auth.js
@@ -37,6 +38,7 @@ model User {
   // A User can be a Student OR a Mentor. The corresponding record will be created during onboarding.
   student       Student?
   mentor        Mentor?
+              
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -76,6 +78,19 @@ model Mentor {
   updatedAt DateTime @updatedAt
 
   @@map("mentors")
+}
+
+model Admin{
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  password      String?   // Optional hashed password for credentials-based authentication
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("admins")
+
+
 }
 
 // --- Auth.js Required Models ---
