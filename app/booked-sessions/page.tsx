@@ -11,7 +11,7 @@ import {
   FilterSection,
   SessionsList,
   SessionDetailsModal
-} from "../../components/booked-sessions";
+} from "../components/booked-sessions";
 
 
 
@@ -30,7 +30,6 @@ export default function BookedSessions() {
     setSelectedSession(null);
   };
 
-  // Filter and sort sessions
   const filteredSessions = filterSessions(mockBookedSessions, filterStatus);
   const sortedSessions = sortSessions(filteredSessions);
   const statusCounts = getStatusCounts(mockBookedSessions);

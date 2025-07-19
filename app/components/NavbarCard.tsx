@@ -62,7 +62,7 @@ const NavbarCard: React.FC<NavbarCardProps> = ({ userName, sidebarHovered = fals
                     <Button
                         variant="default"
                         className="rounded-xl"
-                        onClick={() => router.push("/dashboard")}
+                        onClick={() => router.push("/dashboard/mentor")}
                     >
                         Dashboard
                     </Button>

@@ -26,26 +26,26 @@ export default function Dashboard() {
             studentName: "Alice Johnson",
             studentAvatar: "/avatars/alice.jpg",
             sessionDate: "2024-01-15",
-            sessionTime: "14:00",
-            requestTime: "2024-01-10T10:30:00Z",
+            sessionTime: "10:00",
+            requestTime: "2024-01-10T14:30:00Z",
             subject: "Mathematics"
         },
         {
             id: "2",
             studentName: "Bob Smith",
             studentAvatar: "/avatars/bob.jpg",
-            sessionDate: "2024-01-16",
-            sessionTime: "16:30",
-            requestTime: "2024-01-12T09:15:00Z",
+            sessionDate: "2024-01-15",
+            sessionTime: "14:30",
+            requestTime: "2024-01-11T09:15:00Z",
             subject: "Physics"
         },
         {
             id: "3",
             studentName: "Carol Davis",
             studentAvatar: "/avatars/carol.jpg",
-            sessionDate: "2024-01-14",
-            sessionTime: "10:00",
-            requestTime: "2024-01-11T14:20:00Z",
+            sessionDate: "2024-01-16",
+            sessionTime: "11:00",
+            requestTime: "2024-01-12T16:20:00Z",
             subject: "Chemistry"
         },
         {

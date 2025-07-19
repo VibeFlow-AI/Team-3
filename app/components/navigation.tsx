@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Menu, X } from "lucide-react";
+import Link from "next/link";
 
 /**
  * Navigation items for the navbar
@@ -54,12 +55,14 @@ export default function Navigation() {
 
           {/* Right Side - Get Started Button */}
           <div className="hidden md:flex">
-            <Button
-              className="bg-black hover:bg-gray-800 text-white px-6 py-2"
-              size="sm"
-            >
-              Get Started
-            </Button>
+            <Link href="/login">
+              <Button
+                className="bg-black hover:bg-gray-800 text-white px-6 py-2"
+                size="sm"
+              >
+                Get Started
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -93,12 +96,15 @@ export default function Navigation() {
                 </a>
               ))}
               <div className="pt-2">
-                <Button
-                  className="bg-black hover:bg-gray-800 text-white w-full"
-                  size="sm"
-                >
-                  Get Started
-                </Button>
+                <Link href="/login">
+                  <Button
+                    className="bg-black hover:bg-gray-800 text-white w-full"
+                    size="sm"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Get Started
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

@@ -5,7 +5,7 @@ import Dashboard from "./dashboard/page";
 import Sidebar from "@/app/components/Sidebar";
 import { useState } from "react";
 
-export default function MentorPage() {
+export default function MentorDashboard() {
     const userName = "Theekshana";
     const [sidebarHovered, setSidebarHovered] = useState(false);
 

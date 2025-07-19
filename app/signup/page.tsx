@@ -20,12 +20,19 @@ export default function SignUpPage() {
                 </nav>
             </header>
 
+            {/* Back to Home Link */}
+            <div className="absolute top-6 left-6">
+                <Link href="/" className="text-gray-600 hover:text-black text-sm font-medium">
+                    ← Back to Home
+                </Link>
+            </div>
+
             {/* Main Content */}
             <div className="flex-1 flex items-center justify-center px-4">
-                <div className="bg-white rounded-xl shadow-md p-8 w-full max-w-md text-center">
+                <div className="bg-white rounded-xl shadow-md p-8 w-full max-w-2xl text-center">
                     <h1 className="text-2xl font-semibold mb-8">Get Started</h1>
 
-                    <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {/* Mentor Sign Up */}
                         <div className="flex flex-col items-center">
                             <h2 className="text-lg font-medium mb-4">Sign Up as a Mentor</h2>
@@ -45,6 +52,16 @@ export default function SignUpPage() {
                                 </Button>
                             </Link>
                         </div>
+                    </div>
+
+                    {/* Sign In Link */}
+                    <div className="mt-8 text-center">
+                        <p className="text-sm text-gray-600">
+                            Already have an account?{" "}
+                            <Link href="/login" className="text-black font-medium hover:underline">
+                                Sign in here
+                            </Link>
+                        </p>
                     </div>
                 </div>
             </div>
