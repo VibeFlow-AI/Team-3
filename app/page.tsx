@@ -1,10 +1,7 @@
-import { prisma } from "@/lib/prisma";
-import MentorPage from "./pages/mentor/page";
+import HomePage from "@/app/components/home-page";
 
-async function Home() {
-  const samples = await prisma.sample.findMany();
-
-  return <MentorPage />
+function Home() {
+  return <HomePage />;
 }
 
 export default Home;
