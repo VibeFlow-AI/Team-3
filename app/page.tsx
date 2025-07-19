@@ -1,3 +1,4 @@
+
 import SampleView from "@/components/sample-view";
 import { prisma } from "@/lib/prisma";
 
@@ -8,4 +9,3 @@ async function Home() {
 }
 
 export default Home;
-
