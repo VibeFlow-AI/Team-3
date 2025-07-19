@@ -34,3 +34,5 @@ yarn-error.log*
 # Optional: log directory
 logs
 *.log
+
+.github
