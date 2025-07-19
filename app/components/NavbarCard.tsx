@@ -7,14 +7,13 @@ import { useEffect, useState } from "react";
 
 type NavbarCardProps = {
     userName: string;
+    sidebarHovered?: boolean;
 };
 
-const NavbarCard: React.FC<NavbarCardProps> = ({ userName }) => {
+const NavbarCard: React.FC<NavbarCardProps> = ({ userName, sidebarHovered = false }) => {
     const router = useRouter();
     const [greeting, setGreeting] = useState("Good day");
     const [isScrolled, setIsScrolled] = useState(false);
-    const [navbarWidth, setNavbarWidth] = useState<number | undefined>(undefined);
-    const [sidebarWidth, setSidebarWidth] = useState<number>(64); // Default collapsed width
 
     useEffect(() => {
         const hour = new Date().getHours();
@@ -26,22 +25,11 @@ const NavbarCard: React.FC<NavbarCardProps> = ({ userName }) => {
     useEffect(() => {
         const handleScroll = () => {
             const scrollTop = window.scrollY;
-            const navbar = document.querySelector('[data-navbar]') as HTMLElement;
-            const sidebar = document.querySelector('[data-sidebar]') as HTMLElement;
 
             if (scrollTop > 0 && !isScrolled) {
-                // Capture the current widths before making navbar fixed
-                if (navbar) {
-                    setNavbarWidth(navbar.offsetWidth);
-                }
-                if (sidebar) {
-                    setSidebarWidth(sidebar.offsetWidth);
-                }
                 setIsScrolled(true);
             } else if (scrollTop === 0 && isScrolled) {
                 setIsScrolled(false);
-                setNavbarWidth(undefined);
-                setSidebarWidth(64); // Reset to default
             }
         };
 
@@ -49,15 +37,23 @@ const NavbarCard: React.FC<NavbarCardProps> = ({ userName }) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isScrolled]);
 
+    const sidebarWidth = sidebarHovered ? 192 : 64; // 48 * 4 = 192px for expanded, 16 * 4 = 64px for collapsed
+
     return (
         <>
-            {isScrolled && <div style={{ height: '64px' }} />}
+            {/* Spacer to prevent content jump when navbar becomes fixed */}
+            {isScrolled && <div className="h-16" />}
             <Card
                 data-navbar
-                className={`w-full shadow-md transition-all duration-300 ${isScrolled ? 'fixed top-0 z-50 bg-white' : ''}`}
+                className={`w-full shadow-md transition-all duration-300 ${isScrolled
+                    ? 'fixed top-0 z-50 bg-white border-b'
+                    : ''
+                    }`}
                 style={isScrolled ? {
                     left: `${sidebarWidth}px`,
-                    width: navbarWidth ? `${navbarWidth}px` : `calc(100% - ${sidebarWidth}px)`
+                    width: `calc(100vw - ${sidebarWidth}px - 3rem)`, // Account for padding
+                    marginLeft: 0,
+                    marginRight: 0
                 } : {}}>
                 <CardContent className="flex items-center justify-between px-6 py-2">
                     <div className="text-lg font-semibold">
