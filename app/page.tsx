@@ -1,10 +1,10 @@
-import SampleView from "@/components/sample-view";
 import { prisma } from "@/lib/prisma";
+import MentorPage from "./pages/mentor/page";
 
 async function Home() {
   const samples = await prisma.sample.findMany();
 
-  return <SampleView initialSamples={samples} />;
+  return <MentorPage />
 }
 
 export default Home;
