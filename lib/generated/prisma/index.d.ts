@@ -798,11 +798,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-<<<<<<< HEAD
       modelProps: "user" | "student" | "subjectSkill" | "mentor" | "admin" | "account" | "session" | "verificationToken" | "sample"
-=======
-      modelProps: "user" | "student" | "mentor" | "admin" | "account" | "session" | "verificationToken" | "sample"
->>>>>>> 071e27f799ca0da457f11fd4136014d109cdda84
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -13840,20 +13836,6 @@ export namespace Prisma {
     password?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-<<<<<<< HEAD
-=======
-  }
-
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
->>>>>>> 071e27f799ca0da457f11fd4136014d109cdda84
   }
 
   export type AccountProviderProviderAccountIdCompoundUniqueInput = {

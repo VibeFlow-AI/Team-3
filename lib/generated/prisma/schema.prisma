@@ -19,7 +19,6 @@ enum UserRole {
   STUDENT
   MENTOR
   ADMIN
-<<<<<<< HEAD
 }
 
 // Enum for education levels
@@ -42,8 +41,6 @@ enum LearningStyle {
   HANDS_ON
   THEORETICAL
   MIXED
-=======
->>>>>>> 071e27f799ca0da457f11fd4136014d109cdda84
 }
 
 // The main User model, linked to Auth.js
