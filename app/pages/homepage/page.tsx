@@ -1,8 +1,8 @@
 "use client";
 
-import HeroSection from "./hero-section";
-import ContentSections from "./content-sections";
-import Navigation from "./navigation";
+import HeroSection from "../../components/hero-section";
+import ContentSections from "../../components/content-sections";
+import Navigation from "../../components/navigation";
 
 /**
  * HomePage component serving as the main layout container
