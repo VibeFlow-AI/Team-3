@@ -30,7 +30,7 @@ export async function GET() {
     const expired = timeRemaining === 0;
 
     // Calculate session age for additional context
-    const maxAge = 24 * 60 * 60; // 24 hours in seconds
+    const maxAge = 2 * 60 * 60; // 24 hours in seconds
     const sessionAge = maxAge - timeRemaining;
     const sessionAgeHours = Math.floor(sessionAge / 3600);
     const sessionAgeMinutes = Math.floor((sessionAge % 3600) / 60);
